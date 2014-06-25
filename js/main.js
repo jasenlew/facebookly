@@ -18,7 +18,7 @@ app.models.Person = Backbone.Model.extend({
       state: 'CA',
       country: 'United States of America'
     },
-    imageURL: 'http://i.imgur.com/IcJNwhn.jpg',
+    imageURL: 'http://i.imgur.com/ViGLpbM.gif',
     bio: ''
   }
 });
@@ -31,18 +31,42 @@ app.collections.People = Backbone.Collection.extend({
 // Create a Person view class
 app.views.Person = Backbone.View.extend({
   tagName: 'li',
-  template: _.template('<img src="<%= imageURL %>"><span><%= name %></span>'),
+
+  template: _.template($("#template-person").html()),
+
+  events: {
+    'click': 'showDetails'
+  },
 
   render: function () {
     this.$el.html(this.template(this.model.attributes));
     return this;
+  },
+
+  showDetails: function () {
+    if (this.$el.find('.details').css('display') === 'none') {
+      this.$el.find('.details').css('display', 'block');
+    } else {
+      this.$el.find('.details').css('display', 'none');
+    }
   }
 });
 
+// Create a People (collection) view class
 app.views.People = Backbone.View.extend({
   tagName: 'ul',
 
+  initialize: function () {
+    this.collection.on('add', this.addPerson, this);
+  },
+
+  addPerson: function (personModel) {
+    var personView = new app.views.Person({model: personModel});
+    this.$el.append(personView.render().el);
+  },
+
   render: function () {
+    this.$el.empty();
     this.collection.each(function(personModel) {
       var personView = new app.views.Person({model: personModel});
       this.$el.append(personView.render().el);
@@ -52,11 +76,67 @@ app.views.People = Backbone.View.extend({
   }
 });
 
+app.views.PersonForm = Backbone.View.extend({
+  className: 'addButton',
+
+  events: {
+    'click': 'openForm'
+  },
+
+  openForm: function () {
+
+  },
+
+  render: function () {
+
+  }
+
+});
+
 app.init = function () {
   var community = new app.collections.People([
     {
       name: 'Jasen',
-      title: 'Full Stack Coder'
+      title: 'Full Stack Coder',
+      cohort: 'HR14',
+      mobile: '650.293.7046',
+      address: {
+        street: '740 Promontory Point Lane #3207',
+        city: 'Foster City'
+      },
+      bio: 'hsldkajhdfl sdlkjfsdkjhf sdjkhf skdljhf sldjkhf skldjfh salkdhjf sldkjhf slkdjhf ksjadhf sdjkhf lksjdhf lkjsahdflk slkdjhf ,sljahdf ,sjhf ,sjhf j,shfd lkjdslfkgjhklsfjhdgkljhsaf lkgjaslkdhfg lkasjdf lmsnvlkjsdf.gkv jblsfv.zjksfvkasnflkgjvd,sfjv,kzdsbfgkjbdsf,gjsdkfjbglksdjfglksjdflkgjhdslkf jglksdfgjskdfglkjsdf'
+    },
+    {
+      name: 'Alex',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Forrest',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Imtiaz',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Antonio',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Liam',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Alex',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Alex',
+      title: 'JS Prince'
+    },
+    {
+      name: 'Alex',
+      title: 'JS Prince'
     },
     {
       name: 'Alex',
@@ -70,6 +150,7 @@ app.init = function () {
   });
 
   var communityView = new app.views.People({collection: community});
+  var personFormView = new app.views.PersonForm({collection: community});
 
   $('body').append(communityView.render().el);
 };
