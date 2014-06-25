@@ -77,20 +77,26 @@ app.views.People = Backbone.View.extend({
 });
 
 app.views.PersonForm = Backbone.View.extend({
-  className: 'addButton',
+  // className: 'addButton',
+  template: _.template($("#template-person-form").html()),
 
   events: {
-    'click': 'openForm'
+    'click .addUser': 'showForm'
   },
 
-  openForm: function () {
+  add: function (e) {
+    e.preventDefault();
+    console.log('add');
+  },
 
+  showForm: function () {
+    this.$('form').toggle();
   },
 
   render: function () {
-
+    this.$el.html(this.template());
+    return this;
   }
-
 });
 
 app.init = function () {
@@ -127,8 +133,9 @@ app.init = function () {
       title: 'JS Prince'
     },
     {
-      name: 'Alex',
-      title: 'JS Prince'
+      name: 'Greg',
+      title: 'Earphone "Borrower"',
+      imageURL: 'http://31.media.tumblr.com/304792db36c52fdb7b54d9c9ea1acec8/tumblr_mv0pbo4S2b1slqta0o1_400.gif'
     },
     {
       name: 'Alex',
@@ -151,10 +158,9 @@ app.init = function () {
 
   var communityView = new app.views.People({collection: community});
   var personFormView = new app.views.PersonForm({collection: community});
-
   $('body').append(communityView.render().el);
+  $('ul').append(personFormView.render().el);
 };
-
 
 $(function () {
   app.init();

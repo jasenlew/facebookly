@@ -39,8 +39,12 @@ li div {
   display: none;
 }
 
-
-.addButton {
+.addUser {
+  padding: 10px;
   float: left;
+  cursor: pointer;
 }
 
+form {
+  display: none;
+}
